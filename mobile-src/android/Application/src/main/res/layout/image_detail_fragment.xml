@@ -16,19 +16,40 @@
 -->
 
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
+             android:layout_width="fill_parent"
+             android:layout_height="fill_parent">
 
     <ProgressBar
         style="?android:attr/progressBarStyleLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center" />
+        android:layout_gravity="center"/>
 
-    <com.example.android.displayingbitmaps.ui.RecyclingImageView
-        android:id="@+id/imageView"
+    <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:contentDescription="@string/imageview_description" />
+        android:orientation="vertical">
 
+        <com.example.android.displayingbitmaps.ui.RecyclingImageView
+            android:id="@+id/imageView"
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:contentDescription="@string/imageview_description"/>
+
+        <Button
+            android:id="@+id/save_Button"
+            android:visibility="gone"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/save_to_gallery"/>
+    </LinearLayout>
+
+    <ProgressBar
+        style="?android:attr/progressBarStyleLarge"
+        android:id="@+id/save_ProgressBar"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"/>
 </FrameLayout>

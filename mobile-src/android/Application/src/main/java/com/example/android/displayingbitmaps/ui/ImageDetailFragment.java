@@ -22,21 +22,31 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.example.android.displayingbitmaps.R;
+import com.example.android.displayingbitmaps.Service.SaveService;
+import com.example.android.displayingbitmaps.events.FinishedSaveOneEvent;
+import com.example.android.displayingbitmaps.events.SaveOneEvent;
 import com.example.android.displayingbitmaps.util.ImageFetcher;
 import com.example.android.displayingbitmaps.util.ImageWorker;
 import com.example.android.displayingbitmaps.util.Utils;
 
+import de.greenrobot.event.EventBus;
+
 /**
  * This fragment will populate the children of the ViewPager from {@link ImageDetailActivity}.
  */
-public class ImageDetailFragment extends Fragment {
+public class ImageDetailFragment extends Fragment implements OnClickListener {
     private static final String IMAGE_DATA_EXTRA = "extra_image_data";
     private String mImageUrl;
     private ImageView mImageView;
     private ImageFetcher mImageFetcher;
+
+    private ProgressBar mSaveProgressBar;
 
     /**
      * Factory method to generate a new instance of the fragment given an image number.
@@ -75,6 +85,15 @@ public class ImageDetailFragment extends Fragment {
         // Inflate and locate the main ImageView
         final View v = inflater.inflate(R.layout.image_detail_fragment, container, false);
         mImageView = (ImageView) v.findViewById(R.id.imageView);
+
+        mSaveProgressBar = (ProgressBar) v.findViewById(R.id.save_ProgressBar);
+
+        if (getResources().getBoolean(R.bool.enableLocalStorage)) {
+            Button mSaveButton = (Button) v.findViewById(R.id.save_Button);
+            mSaveButton.setVisibility(View.VISIBLE);
+            mSaveButton.setOnClickListener(this);
+        }
+
         return v;
     }
 
@@ -96,12 +115,45 @@ public class ImageDetailFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        EventBus.getDefault().register(this);
+
+        if (SaveService.INSTANCE.isInSaving(mImageUrl)) {
+            mSaveProgressBar.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    public void onPause() {
+        EventBus.getDefault().unregister(this);
+        super.onPause();
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
         if (mImageView != null) {
             // Cancel any pending image work
             ImageWorker.cancelWork(mImageView);
             mImageView.setImageDrawable(null);
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch(v.getId()) {
+            case R.id.save_Button:
+                mSaveProgressBar.setVisibility(View.VISIBLE);
+                EventBus.getDefault().post(new SaveOneEvent(getActivity().getApplicationContext(), mImageUrl));
+                break;
+        }
+    }
+
+    public void onEventMainThread(FinishedSaveOneEvent event) {
+        if (mImageUrl.equals(event.getUrl())) {
+            mSaveProgressBar.setVisibility(View.GONE);
+            Toast.makeText(getActivity().getApplicationContext(), event.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
 }

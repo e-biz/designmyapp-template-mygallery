@@ -38,17 +38,23 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.android.common.logger.Log;
 import com.example.android.displayingbitmaps.BuildConfig;
 import com.example.android.displayingbitmaps.R;
+import com.example.android.displayingbitmaps.Service.SaveService;
+import com.example.android.displayingbitmaps.events.FinishedSaveEvent;
+import com.example.android.displayingbitmaps.events.SaveEvent;
 import com.example.android.displayingbitmaps.provider.Images;
 import com.example.android.displayingbitmaps.util.ImageCache;
 import com.example.android.displayingbitmaps.util.ImageFetcher;
 import com.example.android.displayingbitmaps.util.Utils;
 
 import java.io.IOException;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * The main fragment that powers the ImageGridActivity screen. Fairly straight forward GridView
@@ -66,6 +72,8 @@ public class ImageGridFragment extends Fragment implements AdapterView.OnItemCli
     private ImageAdapter mAdapter;
     private ImageFetcher mImageFetcher;
     private String[] mImageThumbUrls;
+
+    private ProgressBar mSaveProgressBar;
 
     /**
      * Empty constructor as per the Fragment documentation
@@ -99,6 +107,9 @@ public class ImageGridFragment extends Fragment implements AdapterView.OnItemCli
             LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         final View v = inflater.inflate(R.layout.image_grid_fragment, container, false);
+
+        mSaveProgressBar = (ProgressBar) v.findViewById(R.id.save_all_progressBar);
+
         final GridView mGridView = (GridView) v.findViewById(R.id.gridView);
         mGridView.setAdapter(mAdapter);
         mGridView.setOnItemClickListener(this);
@@ -162,10 +173,16 @@ public class ImageGridFragment extends Fragment implements AdapterView.OnItemCli
         super.onResume();
         mImageFetcher.setExitTasksEarly(false);
         mAdapter.notifyDataSetChanged();
+        EventBus.getDefault().register(this);
+
+        if (SaveService.INSTANCE.isSavingAll()) {
+            mSaveProgressBar.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
     public void onPause() {
+        EventBus.getDefault().unregister(this);
         super.onPause();
         mImageFetcher.setPauseWork(false);
         mImageFetcher.setExitTasksEarly(true);
@@ -198,6 +215,10 @@ public class ImageGridFragment extends Fragment implements AdapterView.OnItemCli
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.main_menu, menu);
+
+        if (getResources().getBoolean(R.bool.enableLocalStorage)) {
+            menu.findItem(R.id.save_all).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        }
     }
 
     @Override
@@ -208,8 +229,36 @@ public class ImageGridFragment extends Fragment implements AdapterView.OnItemCli
                 Toast.makeText(getActivity(), R.string.clear_cache_complete_toast,
                         Toast.LENGTH_SHORT).show();
                 return true;
+            case R.id.save_all:
+                mSaveProgressBar.setVisibility(View.VISIBLE);
+                boolean hasLocalImages = getResources().getBoolean(R.bool.localImages);
+                EventBus.getDefault().post(new SaveEvent(getActivity().getApplicationContext(), getImageUrls(hasLocalImages)));
+                return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void onEventMainThread(FinishedSaveEvent event) {
+        mSaveProgressBar.setVisibility(View.GONE);
+        Toast.makeText(getActivity().getApplicationContext(), event.getMessage(), Toast.LENGTH_LONG).show();
+    }
+
+    private String[] getImageUrls(boolean localImages) {
+        if (!localImages)
+            return Images.imageUrls;
+        else {
+            try {
+                AssetManager assetManager = getResources().getAssets();
+                String[] assets = assetManager.list("images");
+                String[] result = new String[assets.length];
+                for (int i = 0; i < assets.length; i++)
+                    result[i] = "images/" + assets[i];
+                return result;
+            } catch (IOException e) {
+                Log.e(TAG, "Cannot access image assets.");
+            }
+        }
+        return null;
     }
 
     /**
