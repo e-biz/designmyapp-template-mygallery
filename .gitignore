@@ -32,3 +32,4 @@
 #Android
 local.properties
 build/
+.gradle
