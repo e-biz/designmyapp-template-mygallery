@@ -17,6 +17,9 @@
 package com.example.android.displayingbitmaps.util;
 
 import android.content.Context;
+
+import android.content.res.AssetManager;
+
 import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -52,6 +55,8 @@ public class ImageFetcher extends ImageResizer {
     private final Object mHttpDiskCacheLock = new Object();
     private static final int DISK_CACHE_INDEX = 0;
 
+    private Context mContext;
+
     /**
      * Initialize providing a target image width and height for the processing images.
      *
@@ -78,6 +83,7 @@ public class ImageFetcher extends ImageResizer {
     private void init(Context context) {
         checkConnection(context);
         mHttpCacheDir = ImageCache.getDiskCacheDir(context, HTTP_CACHE_DIR);
+        this.mContext = context;
     }
 
     @Override
@@ -182,7 +188,7 @@ public class ImageFetcher extends ImageResizer {
      * The main process method, which will be called by the ImageWorker in the AsyncTask background
      * thread.
      *
-     * @param data The data to load the bitmap, in this case, a regular http URL
+     * @param data The data to load the bitmap, in this case, a regular http URL or a custom image
      * @return The downloaded and resized bitmap
      */
     private Bitmap processBitmap(String data) {
@@ -199,7 +205,8 @@ public class ImageFetcher extends ImageResizer {
             while (mHttpDiskCacheStarting) {
                 try {
                     mHttpDiskCacheLock.wait();
-                } catch (InterruptedException e) {}
+                } catch (InterruptedException e) {
+                }
             }
 
             if (mHttpDiskCache != null) {
@@ -211,11 +218,24 @@ public class ImageFetcher extends ImageResizer {
                         }
                         DiskLruCache.Editor editor = mHttpDiskCache.edit(key);
                         if (editor != null) {
-                            if (downloadUrlToStream(data,
-                                    editor.newOutputStream(DISK_CACHE_INDEX))) {
-                                editor.commit();
-                            } else {
-                                editor.abort();
+                            // If we have local images
+                            if (mContext.getResources().getBoolean(R.bool.localImages)) {
+                                if (readAssetToStream(data,
+                                        editor.newOutputStream(DISK_CACHE_INDEX))) {
+                                    editor.commit();
+                                } else {
+                                    editor.abort();
+                                }
+                            }
+                            // Otherwise, process to usual default download
+                            else {
+
+                                if (downloadUrlToStream(data,
+                                        editor.newOutputStream(DISK_CACHE_INDEX))) {
+                                    editor.commit();
+                                } else {
+                                    editor.abort();
+                                }
                             }
                         }
                         snapshot = mHttpDiskCache.get(key);
@@ -233,7 +253,8 @@ public class ImageFetcher extends ImageResizer {
                     if (fileDescriptor == null && fileInputStream != null) {
                         try {
                             fileInputStream.close();
-                        } catch (IOException e) {}
+                        } catch (IOException e) {
+                        }
                     }
                 }
             }
@@ -247,7 +268,8 @@ public class ImageFetcher extends ImageResizer {
         if (fileInputStream != null) {
             try {
                 fileInputStream.close();
-            } catch (IOException e) {}
+            } catch (IOException e) {
+            }
         }
         return bitmap;
     }
@@ -264,6 +286,8 @@ public class ImageFetcher extends ImageResizer {
      * @return true if successful, false otherwise
      */
     public boolean downloadUrlToStream(String urlString, OutputStream outputStream) {
+        Log.i(TAG, "downloading url to stream: " + urlString);
+
         disableConnectionReuseIfNecessary();
         HttpURLConnection urlConnection = null;
         BufferedOutputStream out = null;
@@ -293,7 +317,8 @@ public class ImageFetcher extends ImageResizer {
                 if (in != null) {
                     in.close();
                 }
-            } catch (final IOException e) {}
+            } catch (final IOException e) {
+            }
         }
         return false;
     }
@@ -308,4 +333,44 @@ public class ImageFetcher extends ImageResizer {
             System.setProperty("http.keepAlive", "false");
         }
     }
+
+    /**
+     * Read a bitmap from the assets folder and write the content to an output stream.
+     *
+     * @param fileName the image name
+     * @return true if successful, false otherwise
+     */
+    public boolean readAssetToStream(String fileName, OutputStream outputStream) {
+        Log.i(TAG, "reading asset: " + fileName);
+        BufferedOutputStream out = null;
+        BufferedInputStream in = null;
+
+        try {
+            AssetManager assetManager = mContext.getAssets();
+            in = new BufferedInputStream(assetManager.open(fileName), IO_BUFFER_SIZE);
+            out = new BufferedOutputStream(outputStream, IO_BUFFER_SIZE);
+            int b;
+            while ((b = in.read()) != -1) {
+                out.write(b);
+            }
+            return true;
+        } catch (final IOException e) {
+            Log.e(TAG, "Error in downloadBitmap - " + e);
+        } finally {
+            try {
+                if (out != null) {
+                    out.close();
+                }
+                if (in != null) {
+                    in.close();
+                }
+                if (outputStream != null) {
+                    outputStream.close();
+                }
+            } catch (final IOException e) {
+            }
+        }
+        return false;
+    }
 }
+

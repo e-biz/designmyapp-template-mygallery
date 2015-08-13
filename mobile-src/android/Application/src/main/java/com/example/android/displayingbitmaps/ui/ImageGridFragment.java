@@ -20,6 +20,7 @@ import android.annotation.TargetApi;
 import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.AssetManager;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -47,6 +48,8 @@ import com.example.android.displayingbitmaps.util.ImageCache;
 import com.example.android.displayingbitmaps.util.ImageFetcher;
 import com.example.android.displayingbitmaps.util.Utils;
 
+import java.io.IOException;
+
 /**
  * The main fragment that powers the ImageGridActivity screen. Fairly straight forward GridView
  * implementation with the key addition being the ImageWorker class w/ImageCache to load children
@@ -62,11 +65,13 @@ public class ImageGridFragment extends Fragment implements AdapterView.OnItemCli
     private int mImageThumbSpacing;
     private ImageAdapter mAdapter;
     private ImageFetcher mImageFetcher;
+    private String[] mImageThumbUrls;
 
     /**
      * Empty constructor as per the Fragment documentation
      */
-    public ImageGridFragment() {}
+    public ImageGridFragment() {
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -113,7 +118,7 @@ public class ImageGridFragment extends Fragment implements AdapterView.OnItemCli
 
             @Override
             public void onScroll(AbsListView absListView, int firstVisibleItem,
-                    int visibleItemCount, int totalItemCount) {
+                                 int visibleItemCount, int totalItemCount) {
             }
         });
 
@@ -232,6 +237,9 @@ public class ImageGridFragment extends Fragment implements AdapterView.OnItemCli
                 mActionBarHeight = TypedValue.complexToDimensionPixelSize(
                         tv.data, context.getResources().getDisplayMetrics());
             }
+
+            boolean hasLocalImages = context.getResources().getBoolean(R.bool.localImages);
+            mImageThumbUrls = getImageThumbUrls(hasLocalImages);
         }
 
         @Override
@@ -242,13 +250,13 @@ public class ImageGridFragment extends Fragment implements AdapterView.OnItemCli
             }
 
             // Size + number of columns for top empty row
-            return Images.imageThumbUrls.length + mNumColumns;
+            return mImageThumbUrls.length + mNumColumns;
         }
 
         @Override
         public Object getItem(int position) {
             return position < mNumColumns ?
-                    null : Images.imageThumbUrls[position - mNumColumns];
+                    null : mImageThumbUrls[position - mNumColumns];
         }
 
         @Override
@@ -303,7 +311,7 @@ public class ImageGridFragment extends Fragment implements AdapterView.OnItemCli
 
             // Finally load the image asynchronously into the ImageView, this also takes care of
             // setting a placeholder image while the background thread runs
-            mImageFetcher.loadImage(Images.imageThumbUrls[position - mNumColumns], imageView);
+            mImageFetcher.loadImage(mImageThumbUrls[position - mNumColumns], imageView);
             return imageView;
             //END_INCLUDE(load_gridview_item)
         }
@@ -332,5 +340,25 @@ public class ImageGridFragment extends Fragment implements AdapterView.OnItemCli
         public int getNumColumns() {
             return mNumColumns;
         }
+
+        public String[] getImageThumbUrls(boolean localImages) {
+            if (!localImages)
+                return Images.imageThumbUrls;
+            else {
+                try {
+                    AssetManager assetManager = getActivity().getAssets();
+                    String[] assets = assetManager.list("image-thumbnails");
+                    String[] result = new String[assets.length];
+                    for (int i = 0; i < assets.length; i++)
+                        result[i] = "image-thumbnails/" + assets[i];
+                    return result;
+                } catch (IOException e) {
+                    Log.e(TAG, "Cannot access image-thumbnails assets.");
+                }
+            }
+            return null;
+        }
+
     }
+
 }

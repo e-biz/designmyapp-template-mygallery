@@ -18,6 +18,7 @@ package com.example.android.displayingbitmaps.ui;
 
 import android.annotation.TargetApi;
 import android.app.ActionBar;
+import android.content.res.AssetManager;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -34,6 +35,7 @@ import android.view.View.OnClickListener;
 import android.view.WindowManager.LayoutParams;
 import android.widget.Toast;
 
+import com.example.android.common.logger.Log;
 import com.example.android.displayingbitmaps.BuildConfig;
 import com.example.android.displayingbitmaps.R;
 import com.example.android.displayingbitmaps.provider.Images;
@@ -41,9 +43,15 @@ import com.example.android.displayingbitmaps.util.ImageCache;
 import com.example.android.displayingbitmaps.util.ImageFetcher;
 import com.example.android.displayingbitmaps.util.Utils;
 
+import java.io.IOException;
+
 public class ImageDetailActivity extends FragmentActivity implements OnClickListener {
+    private static final String TAG = "ImageDetailActivity";
+
     private static final String IMAGE_CACHE_DIR = "images";
     public static final String EXTRA_IMAGE = "extra_image";
+
+    private String[] mImageUrls;
 
     private ImagePagerAdapter mAdapter;
     private ImageFetcher mImageFetcher;
@@ -57,6 +65,9 @@ public class ImageDetailActivity extends FragmentActivity implements OnClickList
         }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.image_detail_pager);
+
+        // Retrieve right image urls
+        mImageUrls = getImageUrls(getResources().getBoolean(R.bool.localImages));
 
         // Fetch screen height and width, to use as our max size when loading images as this
         // activity runs full screen
@@ -82,7 +93,7 @@ public class ImageDetailActivity extends FragmentActivity implements OnClickList
         mImageFetcher.setImageFadeIn(false);
 
         // Set up ViewPager and backing adapter
-        mAdapter = new ImagePagerAdapter(getSupportFragmentManager(), Images.imageUrls.length);
+        mAdapter = new ImagePagerAdapter(getSupportFragmentManager(), mImageUrls.length);
         mPager = (ViewPager) findViewById(R.id.pager);
         mPager.setAdapter(mAdapter);
         mPager.setPageMargin((int) getResources().getDimension(R.dimen.horizontal_page_margin));
@@ -153,7 +164,7 @@ public class ImageDetailActivity extends FragmentActivity implements OnClickList
             case R.id.clear_cache:
                 mImageFetcher.clearCache();
                 Toast.makeText(
-                        this, R.string.clear_cache_complete_toast,Toast.LENGTH_SHORT).show();
+                        this, R.string.clear_cache_complete_toast, Toast.LENGTH_SHORT).show();
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -192,7 +203,7 @@ public class ImageDetailActivity extends FragmentActivity implements OnClickList
 
         @Override
         public Fragment getItem(int position) {
-            return ImageDetailFragment.newInstance(Images.imageUrls[position]);
+            return ImageDetailFragment.newInstance(mImageUrls[position]);
         }
     }
 
@@ -209,5 +220,23 @@ public class ImageDetailActivity extends FragmentActivity implements OnClickList
         } else {
             mPager.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);
         }
+    }
+
+    public String[] getImageUrls(boolean localImages) {
+        if (!localImages)
+            return Images.imageUrls;
+        else {
+            try {
+                AssetManager assetManager = getAssets();
+                String[] assets = assetManager.list("images");
+                String[] result = new String[assets.length];
+                for (int i = 0; i < assets.length; i++)
+                    result[i] = "images/" + assets[i];
+                return result;
+            } catch (IOException e) {
+                Log.e(TAG, "Cannot access image assets.");
+            }
+        }
+        return null;
     }
 }
