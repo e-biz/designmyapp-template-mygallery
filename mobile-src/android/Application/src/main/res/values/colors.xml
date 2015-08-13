@@ -19,5 +19,6 @@
 
     <color name="grid_state_pressed">#1Affffff</color>
     <color name="grid_state_focused">#80000000</color>
-
+    <color name="blue">#ff003366</color>
+    <color name="orange">#ff663300</color>
 </resources>
