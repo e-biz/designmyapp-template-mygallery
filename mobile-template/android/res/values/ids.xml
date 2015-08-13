@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item type="id" name="imageView">false</item>
+    <item type="id" name="save_Button">false</item>
+    <item type="id" name="save_ProgressBar">false</item>
+    <item type="id" name="pager">false</item>
+    <item type="id" name="gridView">false</item>
+    <item type="id" name="save_all_progressBar">false</item>
+    <item type="id" name="save_all">false</item>
+    <item type="id" name="clear_cache">false</item>
+</resources>

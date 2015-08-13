@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <GridView android:id="@id/gridView" android:layout_width="fill_parent" android:layout_height="fill_parent" android:horizontalSpacing="@dimen/image_thumbnail_spacing" android:verticalSpacing="@dimen/image_thumbnail_spacing" android:stretchMode="columnWidth" android:columnWidth="@dimen/image_thumbnail_size" android:numColumns="auto_fit" style="@style/PhotoGridLayout" />
+    <ProgressBar android:layout_gravity="center" android:id="@id/save_all_progressBar" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="wrap_content" style="?android:attr/progressBarStyleLarge" />
+</FrameLayout>

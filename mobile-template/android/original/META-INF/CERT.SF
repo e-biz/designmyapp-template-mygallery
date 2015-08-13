@@ -1,0 +1,49 @@
+Signature-Version: 1.0
+SHA1-Digest-Manifest: qu3HfjEal4dKqxl2Kz/rL1kCraA=
+Created-By: 1.0 (Android)
+
+Name: AndroidManifest.xml
+SHA1-Digest: fPpHzVXV4vmFRA1JvqWIct8yStw=
+
+Name: res/drawable-xxhdpi-v4/icon.png
+SHA1-Digest: uyXH1niTfnOu4joI3Lfa4l7F5gM=
+
+Name: res/layout/image_detail_fragment.xml
+SHA1-Digest: qPDstnqjW9aMD03kWM2HlabJRfo=
+
+Name: res/layout/image_grid_fragment.xml
+SHA1-Digest: RIKOz/jlqFO99guCee6dHpbWOeQ=
+
+Name: res/drawable-hdpi-v4/icon.png
+SHA1-Digest: Z69XPOwsTCSzSbTyAlW44GpMfuc=
+
+Name: res/layout/activity_main.xml
+SHA1-Digest: H6NwMer+u0MKOxA2kdL4P8VpCwA=
+
+Name: res/drawable-nodpi-v4/empty_photo.png
+SHA1-Digest: SOUV0G55A6QasYBbEtWbgb+NfFA=
+
+Name: res/drawable-xhdpi-v4/icon.png
+SHA1-Digest: J8wmj73BJ3uafNOAo9q9X/QbojY=
+
+Name: res/drawable-hdpi-v4/tile.9.png
+SHA1-Digest: idc69prRYGbuWu3BOo0/vTJ8sBM=
+
+Name: res/menu/main_menu.xml
+SHA1-Digest: 0fAj/xKNKbPCE72ZdGqjFUNs0rM=
+
+Name: res/drawable/photogrid_list_selector.xml
+SHA1-Digest: G8WEbLRGAHG8XeHEXst+R4Giib4=
+
+Name: res/layout/image_detail_pager.xml
+SHA1-Digest: 0rNW5FytQzmBRp0QWxUARf4vAVM=
+
+Name: res/drawable-mdpi-v4/icon.png
+SHA1-Digest: DMwQ8yoUmcXK0NV2gt5Y3Ge1qS8=
+
+Name: resources.arsc
+SHA1-Digest: YMxSoajq2wy9qsMwBP94UfuLaAU=
+
+Name: classes.dex
+SHA1-Digest: lG1fohB3E6GJjS/XBLNE/K0QNTg=
+

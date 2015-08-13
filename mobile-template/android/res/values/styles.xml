@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="AppTheme" parent="@style/Theme.Sample" />
+    <style name="AppThemeBlue" parent="@android:style/Theme.Holo">
+        <item name="android:windowBackground">@color/blue</item>
+        <item name="android:actionBarStyle">@style/TranslucentBlueActionBar</item>
+        <item name="android:windowActionBarOverlay">true</item>
+    </style>
+    <style name="AppThemeBlue.FullScreen" parent="@style/AppThemeBlue" />
+    <style name="AppThemeDark" parent="@android:style/Theme" />
+    <style name="AppThemeDark.FullScreen" parent="@android:style/Theme.Black.NoTitleBar.Fullscreen" />
+    <style name="AppThemeOrange" parent="@android:style/Theme.Holo">
+        <item name="android:windowBackground">@color/orange</item>
+        <item name="android:actionBarStyle">@style/TranslucentOrangeActionBar</item>
+        <item name="android:windowActionBarOverlay">true</item>
+    </style>
+    <style name="AppThemeOrange.FullScreen" parent="@style/AppThemeOrange" />
+    <style name="CardView">
+        <item name="cardBackgroundColor">@color/cardview_light_background</item>
+        <item name="cardCornerRadius">@dimen/cardview_default_radius</item>
+        <item name="cardElevation">@dimen/cardview_default_elevation</item>
+        <item name="cardMaxElevation">@dimen/cardview_default_elevation</item>
+        <item name="cardUseCompatPadding">false</item>
+        <item name="cardPreventCornerOverlap">true</item>
+    </style>
+    <style name="CardView.Dark" parent="@style/CardView">
+        <item name="cardBackgroundColor">@color/cardview_dark_background</item>
+    </style>
+    <style name="CardView.Light" parent="@style/CardView">
+        <item name="cardBackgroundColor">@color/cardview_light_background</item>
+    </style>
+    <style name="PhotoGridLayout">
+        <item name="android:listSelector">@drawable/photogrid_list_selector</item>
+        <item name="android:drawSelectorOnTop">true</item>
+    </style>
+    <style name="Theme.Base" parent="@android:style/Theme.Light" />
+    <style name="Theme.Sample" parent="@style/Theme.Base" />
+    <style name="TranslucentBlueActionBar" parent="@android:style/Widget.Holo.ActionBar">
+        <item name="android:background">#99003366</item>
+    </style>
+    <style name="TranslucentOrangeActionBar" parent="@android:style/Widget.Holo.ActionBar">
+        <item name="android:background">#99663300</item>
+    </style>
+    <style name="Widget" />
+    <style name="Widget.SampleMessage" parent="@style/Widget">
+        <item name="android:textAppearance">?android:textAppearanceMedium</item>
+        <item name="android:lineSpacingMultiplier">1.1</item>
+    </style>
+    <style name="Widget.SampleMessageTile" parent="@style/Widget">
+        <item name="android:background">@drawable/tile</item>
+        <item name="android:shadowColor">#7f000000</item>
+        <item name="android:shadowDy">-3.5</item>
+        <item name="android:shadowRadius">2.0</item>
+    </style>
+</resources>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">${name}</string>
+    <string name="clear_cache_complete_toast">Caches have been cleared</string>
+    <string name="clear_cache_menu">Clear Caches</string>
+    <string name="imageview_description">Image Thumbnail</string>
+    <string name="intro_message">"This is a sample application for the Android Training class &amp;quot;Displaying Bitmaps Efficiently&amp;quot; (http://developer.android.com/training/displaying-bitmaps/).
+
+ It demonstrates how to load large bitmaps efficiently off the main UI thread, caching bitmaps (both in memory and on disk), managing bitmap memory and displaying bitmaps in UI elements such as ViewPager and ListView/GridView."</string>
+    <string name="no_network_connection_toast">No network connection found</string>
+    <string name="save_all">Save All</string>
+    <string name="save_error">Error while saving an image</string>
+    <string name="save_to_gallery">Save to gallery</string>
+    <string name="saved">Saved</string>
+</resources>
