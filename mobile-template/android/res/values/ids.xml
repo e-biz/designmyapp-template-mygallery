@@ -5,6 +5,7 @@
     <item type="id" name="save_ProgressBar">false</item>
     <item type="id" name="pager">false</item>
     <item type="id" name="gridView">false</item>
+    <item type="id" name="take_picture_button">false</item>
     <item type="id" name="save_all_progressBar">false</item>
     <item type="id" name="save_all">false</item>
     <item type="id" name="refresh">false</item>

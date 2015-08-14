@@ -1,24 +1,27 @@
 Manifest-Version: 1.0
-Built-By: 1.0.0
-Created-By: Android Gradle 1.0.0
+Built-By: 1.3.0
+Created-By: Android Gradle 1.3.0
 
 Name: AndroidManifest.xml
-SHA1-Digest: QYMdVmm11eLbD3YCkt9/92We2qQ=
+SHA1-Digest: PnKTFTalnR1KShe2jjmRM1QJna8=
+
+Name: META-INF/LICENSE.txt
+SHA1-Digest: vc2gsjBPPmCQ0ExSdVk8ioNQJgs=
 
 Name: res/drawable-xxhdpi-v4/icon.png
 SHA1-Digest: //Z5tmzoAoIF0IHjC10IuMuv8+c=
 
 Name: res/layout/image_detail_fragment.xml
-SHA1-Digest: fnGVz8IBAIJkhgX5vvNzKv3QRXs=
+SHA1-Digest: aiRKrRPvcQ7ZnZghJaXJz0HG9a8=
 
 Name: res/layout/image_grid_fragment.xml
-SHA1-Digest: 42P37CkTW6ZHZXqbzZ05gbgD4OU=
+SHA1-Digest: p9lrlyAtaTCnkVPHiJmwCfvRRIE=
 
 Name: res/drawable-hdpi-v4/icon.png
 SHA1-Digest: 3K9Rmh6Q2JaKcOGxqbSJwc1GbJw=
 
 Name: res/layout/activity_main.xml
-SHA1-Digest: jFjCj5jbX9ZiY4+oIBsdmvivui8=
+SHA1-Digest: CMwIemHI/qmJ+AmAycmO52fhTmk=
 
 Name: res/drawable-nodpi-v4/empty_photo.png
 SHA1-Digest: T86xB+SOtreChzhQIpT5IPgda+Y=
@@ -33,10 +36,13 @@ Name: res/drawable-hdpi-v4/tile.9.png
 SHA1-Digest: VAI6770U7L1uZicHErk2/aR4eE4=
 
 Name: res/menu/main_menu.xml
-SHA1-Digest: UGFSlUVPTlPQY4UGumACB+8SbJ4=
+SHA1-Digest: lQb5yY718Leq4QJ8DVD+2tpR6kg=
 
 Name: res/drawable/photogrid_list_selector.xml
-SHA1-Digest: ofzySbyDSXr+5Qer7L4qvqYpkSY=
+SHA1-Digest: +MS82ubFDY9lT8ETfy5x020pY6A=
+
+Name: META-INF/NOTICE.txt
+SHA1-Digest: LshfiqbJmwRLOH6l5PuliXcsheY=
 
 Name: res/layout/image_detail_pager.xml
 SHA1-Digest: BJR+IDNzIXztrr8veXIixVR4clU=
@@ -45,11 +51,11 @@ Name: res/drawable-mdpi-v4/icon.png
 SHA1-Digest: ORASJDFRLQLXi9wcseOchoAt+1s=
 
 Name: resources.arsc
-SHA1-Digest: Ld0SX3BbU4gJioO5P2RfEBh5IMA=
+SHA1-Digest: 04vkfqmWlLj8g1wEph1IjEsr/UE=
 
 Name: META-INF/services/com.fasterxml.jackson.core.JsonFactory
 SHA1-Digest: wj+dD6oGz5YGyIP+iorCZD19Vfo=
 
 Name: classes.dex
-SHA1-Digest: ZGCdT9XYx5zIJTM5gSMzh2CAyic=
+SHA1-Digest: +fdoJD9UK0xZNSAX2DkRJeWxVuY=
 

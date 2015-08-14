@@ -48,6 +48,7 @@ import com.example.android.displayingbitmaps.service.SaveService;
 import com.example.android.displayingbitmaps.events.DownloadListEvent;
 import com.example.android.displayingbitmaps.events.FinishedDownloadListEvent;
 import com.example.android.displayingbitmaps.events.FinishedSaveEvent;
+import com.example.android.displayingbitmaps.events.FinishedUploadFileEvent;
 import com.example.android.displayingbitmaps.events.SaveEvent;
 import com.example.android.displayingbitmaps.provider.Images;
 import com.example.android.displayingbitmaps.util.ImageCache;
@@ -111,6 +112,12 @@ public class ImageGridFragment extends Fragment implements AdapterView.OnItemCli
         final View v = inflater.inflate(R.layout.image_grid_fragment, container, false);
 
         mSaveProgressBar = (ProgressBar) v.findViewById(R.id.save_all_progressBar);
+
+        // Get the take_picture button and set the OnClickListener if addImage is true or hide it
+        if (getResources().getBoolean(R.bool.addImage)) {
+            v.findViewById(R.id.take_picture_button).setVisibility(View.VISIBLE);
+            v.findViewById(R.id.take_picture_button).setOnClickListener((View.OnClickListener)this.getActivity());
+        }
 
         final GridView mGridView = (GridView) v.findViewById(R.id.gridView);
         mGridView.setAdapter(mAdapter);
@@ -265,6 +272,15 @@ public class ImageGridFragment extends Fragment implements AdapterView.OnItemCli
             mAdapter.notifyDataSetChanged();
         } else {
             Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.refresh_failed), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void onEventMainThread(FinishedUploadFileEvent event) {
+        if (event.isSuccess()) {
+            Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.picture_upload_success), Toast.LENGTH_SHORT).show();
+            EventBus.getDefault().post(new DownloadListEvent(getResources().getString(R.string.backendUrl)));
+        } else {
+            Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.picture_upload_failure), Toast.LENGTH_SHORT).show();
         }
     }
 

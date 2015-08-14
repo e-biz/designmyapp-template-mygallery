@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <bool name="addImage">${addImage}</bool>
     <bool name="enableLocalStorage">${enableLocalStorage}</bool>
     <bool name="localImages">${localImages}</bool>
 </resources>
