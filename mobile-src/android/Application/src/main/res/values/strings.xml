@@ -17,10 +17,14 @@
 
 <resources>
 
+    <string name="backendUrl">http://imagegallery.designmyapp.mobi/</string>
     <string name="clear_cache_menu">Clear Caches</string>
     <string name="clear_cache_complete_toast">Caches have been cleared</string>
     <string name="imageview_description">Image Thumbnail</string>
     <string name="no_network_connection_toast">No network connection found</string>
+    <string name="refresh">refresh</string>
+    <string name="refreshed">Refreshed</string>
+    <string name="refresh_failed">Failed to refresh the image list</string>
     <string name="saved">Saved</string>
     <string name="save_error">Error while saving an image</string>
     <string name="save_all">Save All</string>

@@ -1,4 +1,4 @@
-package com.example.android.displayingbitmaps.Service;
+package com.example.android.displayingbitmaps.service;
 
 import android.content.Context;
 import android.os.Environment;

@@ -7,5 +7,6 @@
     <item type="id" name="gridView">false</item>
     <item type="id" name="save_all_progressBar">false</item>
     <item type="id" name="save_all">false</item>
+    <item type="id" name="refresh">false</item>
     <item type="id" name="clear_cache">false</item>
 </resources>

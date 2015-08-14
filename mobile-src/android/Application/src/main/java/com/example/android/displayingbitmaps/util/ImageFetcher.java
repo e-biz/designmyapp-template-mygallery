@@ -17,9 +17,7 @@
 package com.example.android.displayingbitmaps.util;
 
 import android.content.Context;
-
 import android.content.res.AssetManager;
-
 import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -188,7 +186,7 @@ public class ImageFetcher extends ImageResizer {
      * The main process method, which will be called by the ImageWorker in the AsyncTask background
      * thread.
      *
-     * @param data The data to load the bitmap, in this case, a regular http URL or a custom image
+     * @param data The data to load the bitmap, in this case, a regular http URL or a local image
      * @return The downloaded and resized bitmap
      */
     private Bitmap processBitmap(String data) {
@@ -205,7 +203,7 @@ public class ImageFetcher extends ImageResizer {
             while (mHttpDiskCacheStarting) {
                 try {
                     mHttpDiskCacheLock.wait();
-                } catch (InterruptedException e) {
+                } catch (InterruptedException ignored) {
                 }
             }
 
@@ -245,15 +243,13 @@ public class ImageFetcher extends ImageResizer {
                                 (FileInputStream) snapshot.getInputStream(DISK_CACHE_INDEX);
                         fileDescriptor = fileInputStream.getFD();
                     }
-                } catch (IOException e) {
-                    Log.e(TAG, "processBitmap - " + e);
-                } catch (IllegalStateException e) {
+                } catch (IOException | IllegalStateException e) {
                     Log.e(TAG, "processBitmap - " + e);
                 } finally {
                     if (fileDescriptor == null && fileInputStream != null) {
                         try {
                             fileInputStream.close();
-                        } catch (IOException e) {
+                        } catch (IOException ignored) {
                         }
                     }
                 }
@@ -268,7 +264,7 @@ public class ImageFetcher extends ImageResizer {
         if (fileInputStream != null) {
             try {
                 fileInputStream.close();
-            } catch (IOException e) {
+            } catch (IOException ignored) {
             }
         }
         return bitmap;
@@ -294,8 +290,26 @@ public class ImageFetcher extends ImageResizer {
         BufferedInputStream in = null;
 
         try {
-            final URL url = new URL(urlString);
+            URL url = new URL(mContext.getString(R.string.backendUrl) + urlString);
             urlConnection = (HttpURLConnection) url.openConnection();
+            int code = urlConnection.getResponseCode();
+            // Handle one redirection from http to https or vice-versa
+            switch (code) {
+                case HttpURLConnection.HTTP_MOVED_PERM:
+                case HttpURLConnection.HTTP_MOVED_TEMP:
+                    url = new URL(urlConnection.getHeaderField("Location"));
+                    urlConnection = (HttpURLConnection) url.openConnection();
+                    code = urlConnection.getResponseCode();
+                    break;
+                default:
+                    break;
+            }
+
+            if (code != HttpURLConnection.HTTP_OK) {
+                Log.e(TAG, "Error in downloadBitmap");
+                return false;
+            }
+
             in = new BufferedInputStream(urlConnection.getInputStream(), IO_BUFFER_SIZE);
             out = new BufferedOutputStream(outputStream, IO_BUFFER_SIZE);
 
@@ -317,7 +331,7 @@ public class ImageFetcher extends ImageResizer {
                 if (in != null) {
                     in.close();
                 }
-            } catch (final IOException e) {
+            } catch (final IOException ignored) {
             }
         }
         return false;
@@ -367,7 +381,7 @@ public class ImageFetcher extends ImageResizer {
                 if (outputStream != null) {
                     outputStream.close();
                 }
-            } catch (final IOException e) {
+            } catch (final IOException ignored) {
             }
         }
         return false;

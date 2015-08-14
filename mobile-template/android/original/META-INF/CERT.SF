@@ -1,15 +1,15 @@
 Signature-Version: 1.0
-SHA1-Digest-Manifest: qu3HfjEal4dKqxl2Kz/rL1kCraA=
+SHA1-Digest-Manifest: 4iFX+PmPOjpXbdU8bqnVGtit/9E=
 Created-By: 1.0 (Android)
 
 Name: AndroidManifest.xml
-SHA1-Digest: fPpHzVXV4vmFRA1JvqWIct8yStw=
+SHA1-Digest: lTXPDz5FFhA4TX9SLbLZFsnFluc=
 
 Name: res/drawable-xxhdpi-v4/icon.png
 SHA1-Digest: uyXH1niTfnOu4joI3Lfa4l7F5gM=
 
 Name: res/layout/image_detail_fragment.xml
-SHA1-Digest: qPDstnqjW9aMD03kWM2HlabJRfo=
+SHA1-Digest: gKgNLTsRTTZPcvDN7c0q3k6afBU=
 
 Name: res/layout/image_grid_fragment.xml
 SHA1-Digest: RIKOz/jlqFO99guCee6dHpbWOeQ=
@@ -18,10 +18,13 @@ Name: res/drawable-hdpi-v4/icon.png
 SHA1-Digest: Z69XPOwsTCSzSbTyAlW44GpMfuc=
 
 Name: res/layout/activity_main.xml
-SHA1-Digest: H6NwMer+u0MKOxA2kdL4P8VpCwA=
+SHA1-Digest: 5yX9icSaUqBM9nrG/WRy92se5JY=
 
 Name: res/drawable-nodpi-v4/empty_photo.png
 SHA1-Digest: SOUV0G55A6QasYBbEtWbgb+NfFA=
+
+Name: META-INF/services/com.fasterxml.jackson.core.ObjectCodec
+SHA1-Digest: TUt3WJOdFSbY0ZddbRq3WmcKOBM=
 
 Name: res/drawable-xhdpi-v4/icon.png
 SHA1-Digest: J8wmj73BJ3uafNOAo9q9X/QbojY=
@@ -30,7 +33,7 @@ Name: res/drawable-hdpi-v4/tile.9.png
 SHA1-Digest: idc69prRYGbuWu3BOo0/vTJ8sBM=
 
 Name: res/menu/main_menu.xml
-SHA1-Digest: 0fAj/xKNKbPCE72ZdGqjFUNs0rM=
+SHA1-Digest: ma2ruSfRcNDAJh/ub13axDtyDZE=
 
 Name: res/drawable/photogrid_list_selector.xml
 SHA1-Digest: G8WEbLRGAHG8XeHEXst+R4Giib4=
@@ -42,8 +45,11 @@ Name: res/drawable-mdpi-v4/icon.png
 SHA1-Digest: DMwQ8yoUmcXK0NV2gt5Y3Ge1qS8=
 
 Name: resources.arsc
-SHA1-Digest: YMxSoajq2wy9qsMwBP94UfuLaAU=
+SHA1-Digest: ITthurCuHAifpSwCKFPTE3GoxBs=
+
+Name: META-INF/services/com.fasterxml.jackson.core.JsonFactory
+SHA1-Digest: Ba5fEoE3Fm8wW/CHD7Agsn0j4D0=
 
 Name: classes.dex
-SHA1-Digest: lG1fohB3E6GJjS/XBLNE/K0QNTg=
+SHA1-Digest: 966kFTfr+TtZENmD0xP3kRDtQZg=
 

@@ -224,7 +224,7 @@ public class ImageDetailActivity extends FragmentActivity implements OnClickList
 
     public String[] getImageUrls(boolean localImages) {
         if (!localImages)
-            return Images.imageUrls;
+            return Images.getImageUrls();
         else {
             try {
                 AssetManager assetManager = getAssets();

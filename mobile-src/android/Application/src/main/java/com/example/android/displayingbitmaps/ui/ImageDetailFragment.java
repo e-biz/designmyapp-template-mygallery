@@ -28,7 +28,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.android.displayingbitmaps.R;
-import com.example.android.displayingbitmaps.Service.SaveService;
+import com.example.android.displayingbitmaps.service.SaveService;
 import com.example.android.displayingbitmaps.events.FinishedSaveOneEvent;
 import com.example.android.displayingbitmaps.events.SaveOneEvent;
 import com.example.android.displayingbitmaps.util.ImageFetcher;

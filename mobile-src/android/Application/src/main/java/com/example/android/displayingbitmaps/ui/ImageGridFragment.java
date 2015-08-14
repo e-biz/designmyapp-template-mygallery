@@ -44,7 +44,9 @@ import android.widget.Toast;
 import com.example.android.common.logger.Log;
 import com.example.android.displayingbitmaps.BuildConfig;
 import com.example.android.displayingbitmaps.R;
-import com.example.android.displayingbitmaps.Service.SaveService;
+import com.example.android.displayingbitmaps.service.SaveService;
+import com.example.android.displayingbitmaps.events.DownloadListEvent;
+import com.example.android.displayingbitmaps.events.FinishedDownloadListEvent;
 import com.example.android.displayingbitmaps.events.FinishedSaveEvent;
 import com.example.android.displayingbitmaps.events.SaveEvent;
 import com.example.android.displayingbitmaps.provider.Images;
@@ -172,11 +174,17 @@ public class ImageGridFragment extends Fragment implements AdapterView.OnItemCli
     public void onResume() {
         super.onResume();
         mImageFetcher.setExitTasksEarly(false);
-        mAdapter.notifyDataSetChanged();
         EventBus.getDefault().register(this);
 
         if (SaveService.INSTANCE.isSavingAll()) {
             mSaveProgressBar.setVisibility(View.VISIBLE);
+        }
+
+        // Download the image list if there is a backend
+        if (!getResources().getBoolean(R.bool.localImages)) {
+            EventBus.getDefault().post(new DownloadListEvent(getResources().getString(R.string.backendUrl)));
+        } else {
+            mAdapter.notifyDataSetChanged();
         }
     }
 
@@ -219,6 +227,10 @@ public class ImageGridFragment extends Fragment implements AdapterView.OnItemCli
         if (getResources().getBoolean(R.bool.enableLocalStorage)) {
             menu.findItem(R.id.save_all).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
         }
+
+        if (!getResources().getBoolean(R.bool.localImages)) {
+            menu.findItem(R.id.refresh).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        }
     }
 
     @Override
@@ -228,6 +240,9 @@ public class ImageGridFragment extends Fragment implements AdapterView.OnItemCli
                 mImageFetcher.clearCache();
                 Toast.makeText(getActivity(), R.string.clear_cache_complete_toast,
                         Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.refresh:
+                EventBus.getDefault().post(new DownloadListEvent(getResources().getString(R.string.backendUrl)));
                 return true;
             case R.id.save_all:
                 mSaveProgressBar.setVisibility(View.VISIBLE);
@@ -243,9 +258,19 @@ public class ImageGridFragment extends Fragment implements AdapterView.OnItemCli
         Toast.makeText(getActivity().getApplicationContext(), event.getMessage(), Toast.LENGTH_LONG).show();
     }
 
+    public void onEventMainThread(FinishedDownloadListEvent event) {
+        if (event.isSuccess()) {
+            Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.refreshed), Toast.LENGTH_SHORT).show();
+            mImageThumbUrls = Images.getImageThumbUrls();
+            mAdapter.notifyDataSetChanged();
+        } else {
+            Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.refresh_failed), Toast.LENGTH_SHORT).show();
+        }
+    }
+
     private String[] getImageUrls(boolean localImages) {
         if (!localImages)
-            return Images.imageUrls;
+            return Images.getImageUrls();
         else {
             try {
                 AssetManager assetManager = getResources().getAssets();
@@ -392,7 +417,7 @@ public class ImageGridFragment extends Fragment implements AdapterView.OnItemCli
 
         public String[] getImageThumbUrls(boolean localImages) {
             if (!localImages)
-                return Images.imageThumbUrls;
+                return Images.getImageThumbUrls();
             else {
                 try {
                     AssetManager assetManager = getActivity().getAssets();
