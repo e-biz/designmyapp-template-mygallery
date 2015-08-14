@@ -16,7 +16,16 @@
 package mobi.designmyapp.template.generator;
 
 import mobi.designmyapp.mygallery.model.MyGalleryTemplate;
+import mobi.designmyapp.mygallery.processor.MyGalleryProcessor;
+import mobi.designmyapp.mygallery.validator.MyGalleryValidator;
 import mobi.designmyapp.sdk.model.Generator;
+import mobi.designmyapp.sdk.processor.ContentProcessor;
+import mobi.designmyapp.sdk.processor.UploadProcessor;
+import mobi.designmyapp.sdk.processor.impl.ImageUploadProcessor;
+import mobi.designmyapp.sdk.validator.ContentValidator;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Loïc Ortola on 8/6/14.
@@ -29,8 +38,15 @@ public class MyGalleryGenerator extends Generator<MyGalleryTemplate> {
 
   public static final String TEMPLATE_TAG = "mygallery";
 
+  private List<UploadProcessor> uploadProcessors;
+
   public MyGalleryGenerator() {
     super(MyGalleryTemplate.class);
+
+    // Create upload processors
+    uploadProcessors = new ArrayList<>();
+    // Support built-in image upload processor
+    uploadProcessors.add(new ImageUploadProcessor());
   }
 
   /**
@@ -42,6 +58,43 @@ public class MyGalleryGenerator extends Generator<MyGalleryTemplate> {
   @Override
   public String getTemplateTag() {
     return TEMPLATE_TAG;
+  }
+
+  /**
+   * Get your template content validator.
+   * This will be called when building your app, in order to verify that the Template object sent is semantically valid.
+   *
+   * @return the template ContentValidator
+   */
+  @Override
+  public ContentValidator getValidator() {
+    return new MyGalleryValidator();
+  }
+
+  /**
+   * Get your template content processor.
+   * This will be called after your app price is processed.
+   * The ContentProcessor will allow you to do specific operations depending on the content of the Template object.
+   * (Image processing, Resource bundle etc...)
+   *
+   * @return the template ContentProcessor
+   */
+  @Override
+  public ContentProcessor getProcessor() {
+    return new MyGalleryProcessor();
+  }
+
+  /**
+   * Get the list of your template upload processors.
+   * If your template provides features which require file uploads, you will need UploadProcessors.
+   * The UploadProcessor allows you to specify the valid extensions which will be accepted by the upload module,
+   * provide a custom namespace reserved for it, and enable some custom processing to be done after file is uploaded.
+   *
+   * @return the list of your template UploadProcessors
+   */
+  @Override
+  public List<UploadProcessor> getUploadProcessors() {
+    return uploadProcessors;
   }
 
 }
