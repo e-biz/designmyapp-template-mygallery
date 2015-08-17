@@ -15,9 +15,11 @@
  */
 package mobi.designmyapp.template.generator;
 
+import mobi.designmyapp.mygallery.builder.MyGalleryAndroidBuilder;
 import mobi.designmyapp.mygallery.model.MyGalleryTemplate;
 import mobi.designmyapp.mygallery.processor.MyGalleryProcessor;
 import mobi.designmyapp.mygallery.validator.MyGalleryValidator;
+import mobi.designmyapp.sdk.builder.AndroidBuilder;
 import mobi.designmyapp.sdk.model.Generator;
 import mobi.designmyapp.sdk.processor.ContentProcessor;
 import mobi.designmyapp.sdk.processor.UploadProcessor;
@@ -42,7 +44,7 @@ public class MyGalleryGenerator extends Generator<MyGalleryTemplate> {
 
   public MyGalleryGenerator() {
     super(MyGalleryTemplate.class);
-
+    addVersion("3.0.0");
     // Create upload processors
     uploadProcessors = new ArrayList<>();
     // Support built-in image upload processor
@@ -96,5 +98,20 @@ public class MyGalleryGenerator extends Generator<MyGalleryTemplate> {
   public List<UploadProcessor> getUploadProcessors() {
     return uploadProcessors;
   }
+
+
+  /**
+   * Get your template android builder.
+   * This will be called after your app content is processed.
+   * The AndroidBuilder will allow you to do the final steps before your apk is built:
+   * Copy your assets to the right folder, replace template tokens...
+   *
+   * @return the template AndroidBuilder
+   */
+  @Override
+  public AndroidBuilder<MyGalleryTemplate> getAndroidBuilder() {
+    return new MyGalleryAndroidBuilder();
+  }
+
 
 }

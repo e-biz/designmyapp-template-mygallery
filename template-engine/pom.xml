@@ -6,7 +6,7 @@
 
   <groupId>mobi.designmyapp</groupId>
   <artifactId>mygallery</artifactId>
-  <version>1.0.0-SNAPSHOT</version>
+  <version>3.0.0-SNAPSHOT</version>
   <name>DesignMyApp Template Engine sample MyGallery</name>
   <description>This maven artifact contains all classes needed to develop a DesignMyApp Template engine.</description>
   <url>http://developer.designmyapp.mobi</url>

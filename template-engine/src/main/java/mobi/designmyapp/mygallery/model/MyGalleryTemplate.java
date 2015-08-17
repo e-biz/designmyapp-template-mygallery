@@ -28,8 +28,21 @@ import java.util.List;
  */
 public class MyGalleryTemplate extends Template {
 
+  public static final String TOKEN_APP_THEME = "appTheme";
+  public static final String TOKEN_ADD_IMAGE = "addImage";
+  public static final String TOKEN_ENABLE_LOCAL_STORAGE = "enableLocalStorage";
+  public static final String TOKEN_LOCAL_IMAGES = "localImages";
+  public static final String TOKEN_BACKEND_URL = "backendUrl";
+
+  public static final String DEFAULT_BACKEND_URL = "http://imagegallery.designmyapp.mobi/";
+
+
   private List<Image> customImages;
-  private String customTheme;
+  private String appTheme;
+  private boolean addImage;
+  private boolean enableLocalStorage;
+  private String backendUrl;
+
 
   public MyGalleryTemplate() {
     super(MyGalleryGenerator.TEMPLATE_TAG);
@@ -43,11 +56,35 @@ public class MyGalleryTemplate extends Template {
     this.customImages = customImages;
   }
 
-  public String getCustomTheme() {
-    return customTheme;
+  public String getAppTheme() {
+    return appTheme;
   }
 
-  public void setCustomTheme(String customTheme) {
-    this.customTheme = customTheme;
+  public void setAppTheme(String appTheme) {
+    this.appTheme = appTheme;
+  }
+
+  public boolean getAddImage() {
+    return addImage;
+  }
+
+  public void setAddImage(boolean addImage) {
+    this.addImage = addImage;
+  }
+
+  public boolean getEnableLocalStorage() {
+    return enableLocalStorage;
+  }
+
+  public void setEnableLocalStorage(boolean enableLocalStorage) {
+    this.enableLocalStorage = enableLocalStorage;
+  }
+
+  public String getBackendUrl() {
+    return backendUrl;
+  }
+
+  public void setBackendUrl(String backendUrl) {
+    this.backendUrl = backendUrl;
   }
 }

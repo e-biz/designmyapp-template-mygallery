@@ -31,7 +31,7 @@ public class MyGalleryValidator implements ContentValidator<MyGalleryTemplate> {
 
   public void validate(MyGalleryTemplate obj) {
 
-    String customTheme = obj.getCustomTheme();
+    String customTheme = obj.getAppTheme();
     // Validate that provided custom theme is valid
     if (customTheme != null && !customTheme.trim().isEmpty() && !"blue".equals(customTheme) && !"orange".equals(customTheme)) {
       throw new ValidationException("Illegal theme value provided.");
