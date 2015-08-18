@@ -79,7 +79,7 @@ public class MyGalleryProcessor implements ContentProcessor<MyGalleryTemplate> {
       File destImageFile = new File(imageDirectory, image.getFileName());
       UtilsFactory.getIOUtils().copyFile(imageFile, destImageFile);
 
-      // Generate thumbnail file into image-thumbnails directory
+      // Generate thumbnail file into image-thumbnails directory (only for android)
       File destThumbImageFile = new File(thumbnailDirectory, image.getFileName());
       generateThumbnail(imageFile, destThumbImageFile, THUMBNAIL_SIZE);
     }

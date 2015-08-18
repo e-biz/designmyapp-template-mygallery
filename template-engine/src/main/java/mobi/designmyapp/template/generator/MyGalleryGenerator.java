@@ -16,10 +16,12 @@
 package mobi.designmyapp.template.generator;
 
 import mobi.designmyapp.mygallery.builder.MyGalleryAndroidBuilder;
+import mobi.designmyapp.mygallery.builder.MyGalleryIosBuilder;
 import mobi.designmyapp.mygallery.model.MyGalleryTemplate;
 import mobi.designmyapp.mygallery.processor.MyGalleryProcessor;
 import mobi.designmyapp.mygallery.validator.MyGalleryValidator;
 import mobi.designmyapp.sdk.builder.AndroidBuilder;
+import mobi.designmyapp.sdk.builder.IosBuilder;
 import mobi.designmyapp.sdk.model.Generator;
 import mobi.designmyapp.sdk.processor.ContentProcessor;
 import mobi.designmyapp.sdk.processor.UploadProcessor;
@@ -99,7 +101,6 @@ public class MyGalleryGenerator extends Generator<MyGalleryTemplate> {
     return uploadProcessors;
   }
 
-
   /**
    * Get your template android builder.
    * This will be called after your app content is processed.
@@ -112,6 +113,20 @@ public class MyGalleryGenerator extends Generator<MyGalleryTemplate> {
   public AndroidBuilder<MyGalleryTemplate> getAndroidBuilder() {
     return new MyGalleryAndroidBuilder();
   }
+
+  /**
+   * Get your template ios builder.
+   * This will be called after your app content is processed.
+   * The IosBuilder will allow you to do the final steps before your ipa is built:
+   * Copy your assets to the right folder, replace template tokens...
+   *
+   * @return the template IosBuilder
+   */
+  @Override
+  public IosBuilder<MyGalleryTemplate> getIosBuilder() {
+    return new MyGalleryIosBuilder();
+  }
+
 
 
 }
