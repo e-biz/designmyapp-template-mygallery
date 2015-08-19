@@ -196,6 +196,9 @@ NSString* defaultStringUrl[100]= {@"https://lh6.googleusercontent.com/-55osAWw3x
             [self initurlImages]; // To test with a local list of 100 urls/images
         }
     }
+    
+    //initialize App Theme
+    [self setTheme:[DMAProperties getDMAProp].appTheme];
 }
 
 
@@ -264,6 +267,33 @@ NSString* defaultStringUrl[100]= {@"https://lh6.googleusercontent.com/-55osAWw3x
             [self performSelectorOnMainThread:@selector(refreshUI) withObject:nil waitUntilDone:NO];
         }
     }
+}
+
+-(void) setTheme:(NSString*) appTheme {
+    UIColor * barTintColor = nil;
+    UIColor * titleColor = nil;
+    UIColor * collectionBack = nil;
+    
+    
+    if ([appTheme isEqualToString:@"theme-blue"]) {
+        barTintColor = [UIColor colorWithRed:46.0/255.0 green:63.0/255.0 blue:174.0/255.0 alpha:1.0];
+        titleColor = [UIColor whiteColor];
+        collectionBack = [UIColor colorWithRed:63.0/255.0 green:89.0/255.0 blue:253.0/255.0 alpha:1.0];
+    }
+    else if ([appTheme isEqualToString:@"theme-orange"]) {
+        barTintColor = [UIColor colorWithRed:189.0/255.0 green:106.0/255.0 blue:0.0/255.0 alpha:1.0];
+        titleColor = [UIColor whiteColor];
+        collectionBack = [UIColor colorWithRed:235.0/255.0 green:134.0/255.0 blue:0.0/255.0 alpha:1.0];
+    }
+    else {
+        barTintColor = [UIColor colorWithRed:10.0/255.0 green:10.0/255.0 blue:10.0/255.0 alpha:1.0];
+        titleColor = [UIColor whiteColor];
+        collectionBack = [UIColor colorWithRed:50.0/255.0 green:50.0/255.0 blue:50.0/255.0 alpha:1.0];
+    }
+    
+    [self.navigationController.navigationBar setBarTintColor:barTintColor];
+    [self.navigationController.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName : titleColor}];
+    self.collectionView.backgroundColor = collectionBack;
 }
 
 -(void) refreshUI {

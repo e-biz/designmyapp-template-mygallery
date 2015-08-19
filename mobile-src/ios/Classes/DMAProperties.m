@@ -41,6 +41,7 @@ static DMAProperties * dMAProperties = nil;
     NSMutableDictionary *savedStock = [[NSMutableDictionary alloc] initWithContentsOfFile: path];
     
     dMAProperties.localImages = [[savedStock objectForKey:@"localImages"] boolValue];
+    dMAProperties.appTheme = [savedStock objectForKey:@"appTheme"];
 }
 
 
