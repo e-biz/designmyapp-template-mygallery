@@ -49,6 +49,8 @@
 #import "MyPageViewController.h"
 #import "PageViewControllerData.h"
 
+#import "DMAProperties.h"
+
 #import <AFNetworking/AFNetworking.h>
 
 NSString* defaultStringUrl[100]= {@"https://lh6.googleusercontent.com/-55osAWw3x0Q/URquUtcFr5I/AAAAAAAAAbs/rWlj1RUKrYI/s1024/A%252520Photographer.jpg",
@@ -185,7 +187,14 @@ NSString* defaultStringUrl[100]= {@"https://lh6.googleusercontent.com/-55osAWw3x
     
     if (!self.assets) {
         _assets = [[NSMutableArray alloc] init];
-        [self initurlImages]; // To test with a local list of 100 urls/images
+        
+        //
+        if ([DMAProperties getDMAProp].localImages) {
+            // Images are provided within the bundle customImg.bundle
+            [self initLocalImages];
+        } else {
+            [self initurlImages]; // To test with a local list of 100 urls/images
+        }
     }
 }
 
@@ -198,6 +207,37 @@ NSString* defaultStringUrl[100]= {@"https://lh6.googleusercontent.com/-55osAWw3x
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     [self.collectionView reloadData];
+}
+
+//handle init custom images here
+-(void) initLocalImages {
+    //find the bundle
+    NSString * bundlePath =  [[NSBundle mainBundle] pathForResource:@"customImg" ofType:@"bundle"];
+    NSBundle * bundle = [NSBundle bundleWithPath:bundlePath];
+    
+    //find image by extension
+    NSArray* myJpgImages = [bundle pathsForResourcesOfType:@"jpg" inDirectory:nil];
+    NSArray* myPngImages = [bundle pathsForResourcesOfType:@"png" inDirectory:nil];
+    NSArray* myJpegImages = [bundle pathsForResourcesOfType:@"jpeg" inDirectory:nil];
+    
+    //fill assets with custom images
+    for (int i = 0 ; i< (int)[myJpgImages count] ; i++) {
+        NSString *imageName = myJpgImages[i];
+        UIImage *image = [UIImage imageNamed:imageName];
+        [self.assets addObject:image];
+    }
+    
+    for (int i = 0 ; i< (int)[myPngImages count] ; i++) {
+        NSString *imageName = myPngImages[i];
+        UIImage *image = [UIImage imageNamed:imageName];
+        [self.assets addObject:image];
+    }
+    
+    for (int i = 0 ; i< (int)[myJpegImages count] ; i++) {
+        NSString *imageName = myJpegImages[i];
+        UIImage *image = [UIImage imageNamed:imageName];
+        [self.assets addObject:image];
+    }
 }
 
 // use this method if you want to test the app with a list of 100 urls/images

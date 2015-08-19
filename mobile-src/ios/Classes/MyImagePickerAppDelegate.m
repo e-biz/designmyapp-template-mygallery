@@ -47,11 +47,17 @@
 
 #import "MyImagePickerAppDelegate.h"
 
+#import "DMAProperties.h"
+
 @implementation MyImagePickerAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {    
     
     // override point for customization after application launch    
+    
+    // read the DesignMyApp properties
+    [DMAProperties initDMAProperties];
+    
     return YES;
 }
 
