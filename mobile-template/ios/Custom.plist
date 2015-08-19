@@ -2,11 +2,13 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>appTheme</key>
-	<string>${appTheme}</string>
 	<key>localImages</key>
 	<${localImages}/>
 	<key>enableLocalStorage</key>
 	<${enableLocalStorage}/>
+	<key>backendUrl</key>
+	<string>${backendUrl}</string>
+	<key>appTheme</key>
+	<string>${appTheme}</string>
 </dict>
 </plist>

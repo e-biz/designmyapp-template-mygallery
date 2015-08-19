@@ -182,6 +182,9 @@ NSString* defaultStringUrl[100]= {@"https://lh6.googleusercontent.com/-55osAWw3x
     [self.navigationController.navigationBar
      setTitleTextAttributes:@{NSForegroundColorAttributeName : textColor}];
     
+    //add a button to refresh the list of images
+    [self initRightBarButton:0];
+    
     //initialize the list of the urls
     self.urlImages =[[NSMutableArray alloc]init];
     
@@ -193,7 +196,10 @@ NSString* defaultStringUrl[100]= {@"https://lh6.googleusercontent.com/-55osAWw3x
             // Images are provided within the bundle customImg.bundle
             [self initLocalImages];
         } else {
-            [self initurlImages]; // To test with a local list of 100 urls/images
+            // There is a back-end: app has to call a rest webservice to fill out the list or urls
+            [self refreshImages:nil];
+            
+            //[self initurlImages]; // To test with a local list of 100 urls/images
         }
     }
     
@@ -201,6 +207,32 @@ NSString* defaultStringUrl[100]= {@"https://lh6.googleusercontent.com/-55osAWw3x
     [self setTheme:[DMAProperties getDMAProp].appTheme];
 }
 
+// mode = 0 - standard button action
+// mode = 1 - WIP button
+-(void) initRightBarButton:(int) mode {
+    
+    // No access to a server is available in this mode
+    if ([DMAProperties getDMAProp].localImages == YES) return;
+    
+    UIBarButtonItem * newBarButton;
+    if (!mode) {
+        newBarButton = [[UIBarButtonItem alloc] initWithTitle:@"Refresh"
+                                                        style:UIBarButtonItemStyleDone target:self action:@selector(refreshImages:)];
+    } else {
+        // WIP button
+        CGRect frame = CGRectMake(0.0, 0.0, 25.0, 25.0);
+        UIActivityIndicatorView *loading = [[UIActivityIndicatorView alloc] initWithFrame:frame];
+        [loading startAnimating];
+        [loading sizeToFit];
+        loading.autoresizingMask = (UIViewAutoresizingFlexibleLeftMargin |
+                                    UIViewAutoresizingFlexibleRightMargin |
+                                    UIViewAutoresizingFlexibleTopMargin |
+                                    UIViewAutoresizingFlexibleBottomMargin);
+        // initing the bar button  UIButton
+        newBarButton = [[UIBarButtonItem alloc] initWithCustomView:loading];
+    }
+    self.navigationItem.rightBarButtonItem = newBarButton;
+}
 
 - (void)viewWillAppear:(BOOL)animated {
    [super viewWillAppear:animated];
@@ -300,6 +332,74 @@ NSString* defaultStringUrl[100]= {@"https://lh6.googleusercontent.com/-55osAWw3x
     [self.collectionView reloadData];
 }
 
+
+-(void) refreshImages:(id) sender {
+    
+    // 1. create the url
+    NSString *string = [NSString stringWithFormat:@"%@image/list", [DMAProperties getDMAProp].backendUrl];
+    NSURL *url = [NSURL URLWithString:string];
+    NSURLRequest *request = [NSURLRequest requestWithURL:url];
+    
+    // 2. access to the url
+    AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
+    operation.responseSerializer = [AFJSONResponseSerializer serializer];
+    
+    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *thisOperation, id responseObject) {
+        
+        // 3. Process the answer
+        NSDictionary * dictionary = nil;
+        dictionary = (NSDictionary *)responseObject;
+        
+        id arrayOf = nil;
+        arrayOf = [dictionary objectForKey:@"thumbnails" ];
+        if (arrayOf == nil) return;
+        
+        [self.urlImages removeAllObjects];
+        [self.assets removeAllObjects];
+        for (NSString * currentImage in arrayOf) {
+            [self.assets addObject:[UIImage imageNamed:@"Placeholder.png"]];
+            [self.urlImages addObject:[NSString stringWithFormat:@"%@image/%@", [DMAProperties getDMAProp].backendUrl, currentImage]];
+        }
+        //
+        // load image in a different thread
+        [self initRightBarButton:0];
+        [NSThread detachNewThreadSelector: @selector(asynchImageLoading) toTarget:self withObject:nil];
+        
+    } failure:^(AFHTTPRequestOperation *thisOperation, NSError *error) {
+        
+        // 3bis. process the error
+        [self displayErrorTypeFor:thisOperation withCustomMsg:@"Error retrieving the list of images"];
+        
+        
+    }];
+    
+    // 4. Launch the request asynchronously
+    [operation start];
+}
+
+-(void) displayErrorTypeFor:(AFHTTPRequestOperation *) thisOperation withCustomMsg:(NSString *) customMsg {
+    
+    UIAlertView *alertView;
+    NSInteger httpCode = thisOperation.response.statusCode;
+    
+    if ((httpCode == 404)||(httpCode == 0)) {
+        alertView = [[UIAlertView alloc] initWithTitle:customMsg
+                                               message:
+                     [NSString stringWithFormat:@"The cloud dedicated instance is probably permanently down.\nCheck your network and this url to be sure:\n%@status\n\nYou can recycle your mobile app and generate a new one at \nhttp://mygallery.designmyapp.mobi", [DMAProperties getDMAProp].backendUrl]
+                                              delegate:nil
+                                     cancelButtonTitle:@"Ok"
+                                     otherButtonTitles:nil];
+        
+    } else {
+        alertView = [[UIAlertView alloc] initWithTitle:customMsg
+                                               message:[NSString stringWithFormat:@"%@ (code=%i)",thisOperation.responseString, (int)httpCode]
+                                              delegate:nil
+                                     cancelButtonTitle:@"Ok"
+                                     otherButtonTitles:nil];
+        
+    }
+    [alertView show];
+}
 
 #pragma mark - UICollectionViewDelegate
 
