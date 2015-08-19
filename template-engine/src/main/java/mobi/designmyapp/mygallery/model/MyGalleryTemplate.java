@@ -34,14 +34,10 @@ public class MyGalleryTemplate extends Template {
   public static final String TOKEN_LOCAL_IMAGES = "localImages";
   public static final String TOKEN_BACKEND_URL = "backendUrl";
 
-  public static final String DEFAULT_BACKEND_URL = "http://imagegallery.designmyapp.mobi/";
-
-
   private List<Image> customImages;
   private String appTheme;
   private boolean addImage;
   private boolean enableLocalStorage;
-  private String backendUrl;
 
 
   public MyGalleryTemplate() {
@@ -78,13 +74,5 @@ public class MyGalleryTemplate extends Template {
 
   public void setEnableLocalStorage(boolean enableLocalStorage) {
     this.enableLocalStorage = enableLocalStorage;
-  }
-
-  public String getBackendUrl() {
-    return backendUrl;
-  }
-
-  public void setBackendUrl(String backendUrl) {
-    this.backendUrl = backendUrl;
   }
 }

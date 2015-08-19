@@ -15,12 +15,20 @@
  */
 package mobi.designmyapp.template.generator;
 
+import mobi.designmyapp.common.container.manager.ContainerManager;
+import mobi.designmyapp.common.container.provider.Node;
+import mobi.designmyapp.common.container.provider.NodeRequest;
+import mobi.designmyapp.common.container.service.ContainerService;
+import mobi.designmyapp.common.util.UtilsFactory;
 import mobi.designmyapp.mygallery.builder.MyGalleryAndroidBuilder;
+import mobi.designmyapp.mygallery.builder.MyGalleryContainerBuilder;
 import mobi.designmyapp.mygallery.builder.MyGalleryIosBuilder;
 import mobi.designmyapp.mygallery.model.MyGalleryTemplate;
 import mobi.designmyapp.mygallery.processor.MyGalleryProcessor;
+import mobi.designmyapp.mygallery.utils.MyGalleryProperties;
 import mobi.designmyapp.mygallery.validator.MyGalleryValidator;
 import mobi.designmyapp.sdk.builder.AndroidBuilder;
+import mobi.designmyapp.sdk.builder.ContainerBuilder;
 import mobi.designmyapp.sdk.builder.IosBuilder;
 import mobi.designmyapp.sdk.model.Generator;
 import mobi.designmyapp.sdk.processor.ContentProcessor;
@@ -51,6 +59,7 @@ public class MyGalleryGenerator extends Generator<MyGalleryTemplate> {
     uploadProcessors = new ArrayList<>();
     // Support built-in image upload processor
     uploadProcessors.add(new ImageUploadProcessor());
+    createDesignMyAppNode();
   }
 
   /**
@@ -128,5 +137,29 @@ public class MyGalleryGenerator extends Generator<MyGalleryTemplate> {
   }
 
 
+  /**
+   * Get your template container builder.
+   * @return the template ContainerBuilder
+   */
+  @Override
+  public ContainerBuilder<MyGalleryTemplate> getContainerBuilder() {
+    return new MyGalleryContainerBuilder();
+  }
+
+
+  private void createDesignMyAppNode() {
+    ContainerService cs = UtilsFactory.getContainerService();
+    ContainerManager cm = cs.getContainerManager(TEMPLATE_TAG);
+    NodeRequest dmaNodeRequest = NodeRequest.designMyApp()
+        .templateTag(TEMPLATE_TAG)
+        .endpoint(MyGalleryProperties.INSTANCE.getDmaNodeEndpoint())
+        .keyId(MyGalleryProperties.INSTANCE.getDmaNodeKeyId())
+        .secretKey(MyGalleryProperties.INSTANCE.getDmaNodeSecretKey())
+        .poolSize(20)
+        .priority(0)
+        .build();
+    Node designMyAppNode = cs.createNode(dmaNodeRequest);
+    cm.addNode(designMyAppNode);
+  }
 
 }

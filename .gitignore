@@ -8,6 +8,7 @@
 .settings
 .project
 
+env-*.properties
 */app/.buildignore
 */app/.htaccess
 .editorconfig
@@ -32,3 +33,4 @@
 #Android
 local.properties
 build/
+.gradle/

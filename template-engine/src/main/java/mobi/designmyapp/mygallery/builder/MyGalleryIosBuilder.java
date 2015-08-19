@@ -90,13 +90,10 @@ public class MyGalleryIosBuilder extends IosBuilder<MyGalleryTemplate> {
     model.put(MyGalleryTemplate.TOKEN_ADD_IMAGE, String.valueOf(template.getAddImage()));
     model.put(MyGalleryTemplate.TOKEN_ENABLE_LOCAL_STORAGE, String.valueOf(template.getEnableLocalStorage()));
 
-    String backendUrl = template.getBackendUrl();
+    // Get the backend url provided by the container builder
+    String backendUrl = (String) UtilsFactory.getContainerService().getBuilderResponse();
     if (backendUrl != null) {
-      if (!backendUrl.trim().isEmpty()) {
-        model.put(MyGalleryTemplate.TOKEN_BACKEND_URL, backendUrl.trim());
-      } else {
-        model.put(MyGalleryTemplate.TOKEN_BACKEND_URL, MyGalleryTemplate.DEFAULT_BACKEND_URL);
-      }
+      model.put(MyGalleryTemplate.TOKEN_BACKEND_URL, backendUrl);
     } else {
       model.put(MyGalleryTemplate.TOKEN_BACKEND_URL, "");
     }
