@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>105BAD5D-02CE-49F8-B1A0-6844B8F4AFB9</string>
+	<key>IDESourceControlProjectName</key>
+	<string>MyImagePicker</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>1538332F66E619CC26379DD3669C54ED3E4D2B9E</key>
+		<string>https://github.com/e-biz/dma-template-mygallery</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>mobile-src/ios/MyImagePicker.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>1538332F66E619CC26379DD3669C54ED3E4D2B9E</key>
+		<string>../../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/e-biz/dma-template-mygallery</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>1538332F66E619CC26379DD3669C54ED3E4D2B9E</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>1538332F66E619CC26379DD3669C54ED3E4D2B9E</string>
+			<key>IDESourceControlWCCName</key>
+			<string>dma-template-mygallery</string>
+		</dict>
+	</array>
+</dict>
+</plist>
