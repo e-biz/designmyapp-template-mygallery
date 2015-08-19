@@ -23,7 +23,9 @@ import mobi.designmyapp.common.util.UtilsFactory;
 import mobi.designmyapp.mygallery.builder.MyGalleryAndroidBuilder;
 import mobi.designmyapp.mygallery.builder.MyGalleryContainerBuilder;
 import mobi.designmyapp.mygallery.builder.MyGalleryIosBuilder;
+import mobi.designmyapp.mygallery.model.MyGalleryPricing;
 import mobi.designmyapp.mygallery.model.MyGalleryTemplate;
+import mobi.designmyapp.mygallery.processor.MyGalleryPriceProcessor;
 import mobi.designmyapp.mygallery.processor.MyGalleryProcessor;
 import mobi.designmyapp.mygallery.utils.MyGalleryProperties;
 import mobi.designmyapp.mygallery.validator.MyGalleryValidator;
@@ -32,6 +34,7 @@ import mobi.designmyapp.sdk.builder.ContainerBuilder;
 import mobi.designmyapp.sdk.builder.IosBuilder;
 import mobi.designmyapp.sdk.model.Generator;
 import mobi.designmyapp.sdk.processor.ContentProcessor;
+import mobi.designmyapp.sdk.processor.PriceProcessor;
 import mobi.designmyapp.sdk.processor.UploadProcessor;
 import mobi.designmyapp.sdk.processor.impl.ImageUploadProcessor;
 import mobi.designmyapp.sdk.validator.ContentValidator;
@@ -146,6 +149,16 @@ public class MyGalleryGenerator extends Generator<MyGalleryTemplate> {
     return new MyGalleryContainerBuilder();
   }
 
+  /**
+   * Get your template price processor.
+   * This will be called after your content validation.
+   * The PriceProcessor will compute the total price which has to be paid depending on the content provided in the Template object.
+   *
+   * @return the template PriceProcessor
+   */
+  public PriceProcessor<MyGalleryTemplate, MyGalleryPricing> getPriceProcessor() {
+    return new MyGalleryPriceProcessor();
+  }
 
   private void createDesignMyAppNode() {
     ContainerService cs = UtilsFactory.getContainerService();
