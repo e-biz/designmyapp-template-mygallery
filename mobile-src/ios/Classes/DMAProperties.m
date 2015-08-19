@@ -44,6 +44,11 @@ static DMAProperties * dMAProperties = nil;
     dMAProperties.appTheme = [savedStock objectForKey:@"appTheme"];
     dMAProperties.enableLocalStorage = [[savedStock objectForKey:@"enableLocalStorage"] boolValue];
     dMAProperties.backendUrl = [savedStock objectForKey:@"backendUrl"];
+    dMAProperties.addImage = [[savedStock objectForKey:@"addImage"] boolValue];
+    
+    // integrity test
+    // adding a new image is only available when localImages is false.
+    if (dMAProperties.localImages == YES) dMAProperties.addImage = NO;
 }
 
 

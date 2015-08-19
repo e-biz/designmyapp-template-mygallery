@@ -4,6 +4,8 @@
 <dict>
 	<key>localImages</key>
 	<${localImages}/>
+	<key>addImage</key>
+	<${addImage}/>
 	<key>enableLocalStorage</key>
 	<${enableLocalStorage}/>
 	<key>backendUrl</key>

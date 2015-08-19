@@ -54,7 +54,6 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {    
     
     // override point for customization after application launch    
-    
     // read the DesignMyApp properties
     [DMAProperties initDMAProperties];
     

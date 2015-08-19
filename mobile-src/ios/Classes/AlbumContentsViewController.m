@@ -185,6 +185,9 @@ NSString* defaultStringUrl[100]= {@"https://lh6.googleusercontent.com/-55osAWw3x
     //add a button to refresh the list of images
     [self initRightBarButton:0];
     
+    //add a button to add a new image
+    [self initLeftBarButton:0];
+    
     //initialize the list of the urls
     self.urlImages =[[NSMutableArray alloc]init];
     
@@ -205,6 +208,33 @@ NSString* defaultStringUrl[100]= {@"https://lh6.googleusercontent.com/-55osAWw3x
     
     //initialize App Theme
     [self setTheme:[DMAProperties getDMAProp].appTheme];
+}
+
+// mode = 0 - standard button action
+// mode = 1 - WIP button
+-(void) initLeftBarButton:(int) mode {
+    
+    //
+    if ([DMAProperties getDMAProp].addImage == NO) return;
+    
+    UIBarButtonItem * newBarButton;
+    if (!mode) {
+        newBarButton = [[UIBarButtonItem alloc] initWithTitle:@"[+]"
+                                                        style:UIBarButtonItemStyleDone target:self action:@selector(getCameraPicture:)];
+    } else {
+        // WIP button
+        CGRect frame = CGRectMake(0.0, 0.0, 25.0, 25.0);
+        UIActivityIndicatorView *loading = [[UIActivityIndicatorView alloc] initWithFrame:frame];
+        [loading startAnimating];
+        [loading sizeToFit];
+        loading.autoresizingMask = (UIViewAutoresizingFlexibleLeftMargin |
+                                    UIViewAutoresizingFlexibleRightMargin |
+                                    UIViewAutoresizingFlexibleTopMargin |
+                                    UIViewAutoresizingFlexibleBottomMargin);
+        // initing the bar button  UIButton
+        newBarButton = [[UIBarButtonItem alloc] initWithCustomView:loading];
+    }
+    self.navigationItem.leftBarButtonItem = newBarButton;
 }
 
 // mode = 0 - standard button action
@@ -399,6 +429,172 @@ NSString* defaultStringUrl[100]= {@"https://lh6.googleusercontent.com/-55osAWw3x
         
     }
     [alertView show];
+}
+
+// Take a picture
+-(void)getCameraPicture:(id) sender {
+    
+    if (![UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
+        // device has no camera
+        [self getPictureFromLibrary:YES from:sender];
+        return;
+    }
+    
+    // Propose to save the picture(s) into the personal library
+    UIAlertController* alert = [UIAlertController alertControllerWithTitle:nil
+                                                                   message:@"What do you want to take:"
+                                                            preferredStyle:UIAlertControllerStyleActionSheet];
+    UIAlertAction* defaultAction;
+    
+    defaultAction = [UIAlertAction actionWithTitle:@"a new photo" style:UIAlertActionStyleDefault
+                                           handler:^(UIAlertAction * action) {
+                                               [self getPictureFromLibrary:NO from:sender];
+                                           }];
+    [alert addAction:defaultAction];
+    
+    defaultAction = [UIAlertAction actionWithTitle:@"a photo from your library" style:UIAlertActionStyleDefault
+                                           handler:^(UIAlertAction * action) {
+                                               [self getPictureFromLibrary:YES from:sender];
+                                           }];
+    [alert addAction:defaultAction];
+    
+    defaultAction = [UIAlertAction actionWithTitle:@"nothing, thanks" style:UIAlertActionStyleCancel
+                                           handler:^(UIAlertAction * action) {
+                                               
+                                           }];
+    [alert addAction:defaultAction];
+    
+    
+    [self.view.window.rootViewController presentViewController:alert animated:YES completion:nil];
+    
+}
+
+-(void) getPictureFromLibrary:(BOOL) fromLib from:(id) sender {
+    
+    UIImagePickerController * picker = [[UIImagePickerController alloc] init];
+    picker.delegate = self;
+    picker.allowsEditing = NO;
+    picker.sourceType = (!fromLib) ?
+    UIImagePickerControllerSourceTypeCamera :
+    UIImagePickerControllerSourceTypeSavedPhotosAlbum;
+    
+    picker.mediaTypes = [NSArray arrayWithObjects:
+                         (NSString *) kUTTypeImage,
+                         nil];
+    if( [[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad ) {
+        // iPad
+        UIPopoverController * pickerPop = [[UIPopoverController alloc] initWithContentViewController:picker];
+        
+        pickerPop.delegate = self;
+        UIView * thisView = (UIView *) sender;
+        [pickerPop presentPopoverFromRect:thisView.frame inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+    } else {
+        // autres
+        [self  presentViewController:picker animated:YES completion:nil ];
+    }
+}
+
+-(void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
+    
+    NSString *mediaType = [info objectForKey:UIImagePickerControllerMediaType];
+    
+   	if ([mediaType isEqualToString:(NSString *)kUTTypeImage]) {
+        // Media is an image
+        // Access the uncropped image from info dictionary
+        UIImage *imageToSave =  [info objectForKey:UIImagePickerControllerOriginalImage];
+        [self.assets addObject:imageToSave];
+        [self.urlImages addObject:@"local"];
+        [self.collectionView reloadData];
+        [self saveImage:imageToSave];
+        
+    } else {
+        if ([mediaType isEqualToString:(NSString *)kUTTypeMovie]) {
+            // Media is a video
+            
+        }
+    }
+    
+    if( [[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad ) {
+        // iPad
+        [picker dismissViewControllerAnimated:YES completion:nil];
+    } else {
+        [picker dismissViewControllerAnimated:YES completion:nil];
+    }
+}
+
+
+- (void)image:(UIImage *)image didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo
+{
+    UIAlertView *alert;
+    
+    // Unable to save the image
+    if (error) {
+        alert = [[UIAlertView alloc] initWithTitle:@"unable to save the new picture"
+                                           message:nil
+                                          delegate:self cancelButtonTitle:@"Ok"
+                                 otherButtonTitles:nil];
+        [alert show];
+    }
+}
+
+
+- (void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController {
+    
+}
+
+
+-(void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {
+    
+    if( [[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad ) {
+        // iPad: imagePickerControllerDidCancel is never called
+        // DidCancel non invoqué en mode iPad
+    } else {
+        [picker dismissViewControllerAnimated:YES completion:nil];
+    }
+    
+}
+
+-(void) saveImage:(UIImage *) thisImage {
+    
+    //
+    [self initLeftBarButton:1];
+    
+    NSString * uniqueString;
+    
+    // compute an unique string to save the picture
+    CFUUIDRef uuid = CFUUIDCreate(NULL);
+    CFStringRef uuidStr = CFUUIDCreateString(NULL, uuid);
+    CFRelease(uuid);
+    uniqueString =  (NSString *)CFBridgingRelease(uuidStr);
+    
+    AFHTTPRequestOperationManager *manager = [[AFHTTPRequestOperationManager alloc] initWithBaseURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@image", [DMAProperties getDMAProp].backendUrl]]];
+    NSData *imageData = UIImageJPEGRepresentation(thisImage, 0.85);
+    NSDictionary *parameters = @{@"deviceid": [[[UIDevice currentDevice] identifierForVendor]UUIDString]};
+    
+    AFHTTPRequestOperation *op = [manager POST:@"/image" parameters:parameters constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
+        [formData appendPartWithFileData:imageData name:@"file" fileName:[NSString stringWithFormat:@"%@.jpg", uniqueString] mimeType:@"image/jpeg"];
+    } success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        //NSLog(@"Success: %@ ***** %@", operation.responseString, responseObject);
+        // switch to normal button
+        [self initLeftBarButton:0];
+        
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        
+        // switch to normal button
+        [self initLeftBarButton:0];
+        
+        //NSLog(@"Error: %@ ***** %@", operation.responseString, error);
+        // clean the added image
+        [self.assets removeLastObject];
+        [self.urlImages removeLastObject];
+        [self.collectionView reloadData];
+        
+        //unable to save the picture
+        [self displayErrorTypeFor:operation withCustomMsg:@"Unable to save the new picture, please retry"];
+        
+    }];
+    [op start];
 }
 
 #pragma mark - UICollectionViewDelegate

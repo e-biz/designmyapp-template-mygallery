@@ -15,6 +15,7 @@
 @property (nonatomic, retain) NSString * appTheme;
 @property (nonatomic, assign) BOOL enableLocalStorage; // YES: an action is available to store in the personal library the images
 @property (nonatomic, retain) NSString * backendUrl;
+@property (nonatomic, assign) BOOL addImage;
 
 
 +(DMAProperties *) getDMAProp;
