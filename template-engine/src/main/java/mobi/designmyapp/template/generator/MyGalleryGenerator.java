@@ -25,6 +25,7 @@ import mobi.designmyapp.mygallery.builder.MyGalleryContainerBuilder;
 import mobi.designmyapp.mygallery.builder.MyGalleryIosBuilder;
 import mobi.designmyapp.mygallery.model.MyGalleryPricing;
 import mobi.designmyapp.mygallery.model.MyGalleryTemplate;
+import mobi.designmyapp.mygallery.processor.ImageArchiveProcessor;
 import mobi.designmyapp.mygallery.processor.MyGalleryPriceProcessor;
 import mobi.designmyapp.mygallery.processor.MyGalleryProcessor;
 import mobi.designmyapp.mygallery.utils.MyGalleryProperties;
@@ -33,10 +34,12 @@ import mobi.designmyapp.sdk.builder.AndroidBuilder;
 import mobi.designmyapp.sdk.builder.ContainerBuilder;
 import mobi.designmyapp.sdk.builder.IosBuilder;
 import mobi.designmyapp.sdk.model.Generator;
+import mobi.designmyapp.sdk.processor.ArchiveProcessor;
 import mobi.designmyapp.sdk.processor.ContentProcessor;
 import mobi.designmyapp.sdk.processor.PriceProcessor;
 import mobi.designmyapp.sdk.processor.UploadProcessor;
 import mobi.designmyapp.sdk.processor.impl.ImageUploadProcessor;
+import mobi.designmyapp.sdk.processor.impl.ZipUploadProcessor;
 import mobi.designmyapp.sdk.validator.ContentValidator;
 
 import java.util.ArrayList;
@@ -54,6 +57,7 @@ public class MyGalleryGenerator extends Generator<MyGalleryTemplate> {
   public static final String TEMPLATE_TAG = "mygallery";
 
   private List<UploadProcessor> uploadProcessors;
+  private List<ArchiveProcessor> archiveProcessors;
 
   public MyGalleryGenerator() {
     super(MyGalleryTemplate.class);
@@ -62,6 +66,13 @@ public class MyGalleryGenerator extends Generator<MyGalleryTemplate> {
     uploadProcessors = new ArrayList<>();
     // Support built-in image upload processor
     uploadProcessors.add(new ImageUploadProcessor());
+	// Support built-in zip upload processor
+    uploadProcessors.add(new ZipUploadProcessor());
+
+    // Add custom image archive processor
+    archiveProcessors = new ArrayList<>();
+    archiveProcessors.add(new ImageArchiveProcessor());
+
     createDesignMyAppNode();
   }
 
@@ -160,6 +171,20 @@ public class MyGalleryGenerator extends Generator<MyGalleryTemplate> {
     return new MyGalleryPriceProcessor();
   }
 
+
+  /**
+   * Get the list of your archive upload processors.
+   * If your template supports zip file uploads, you will need to provide ArchiveProcessors.
+   * The ArchiveProcessor allows you to specify the dedicated archive namespace, and enable some custom processing
+   * after file has been unzipped.
+   *
+   * @return the list of your template ArchiveProcessors
+   */
+  @Override
+  public List<ArchiveProcessor> getArchiveProcessors() {
+    return archiveProcessors;
+  }
+
   private void createDesignMyAppNode() {
     ContainerService cs = UtilsFactory.getContainerService();
     ContainerManager cm = cs.getContainerManager(TEMPLATE_TAG);
@@ -174,5 +199,4 @@ public class MyGalleryGenerator extends Generator<MyGalleryTemplate> {
     Node designMyAppNode = cs.createNode(dmaNodeRequest);
     cm.addNode(designMyAppNode);
   }
-
 }
