@@ -42,6 +42,7 @@ static DMAProperties * dMAProperties = nil;
     
     dMAProperties.localImages = [[savedStock objectForKey:@"localImages"] boolValue];
     dMAProperties.appTheme = [savedStock objectForKey:@"appTheme"];
+    dMAProperties.enableLocalStorage = [[savedStock objectForKey:@"enableLocalStorage"] boolValue];
 }
 
 

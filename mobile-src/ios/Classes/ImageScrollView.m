@@ -48,6 +48,8 @@
 #import "ImageScrollView.h"
 #import "PageViewControllerData.h"
 
+#import "DMAProperties.h"
+
 @interface ImageScrollView () <UIScrollViewDelegate>
 
 @property (nonatomic, strong) UIImageView *zoomView;  // contains the full image
@@ -73,6 +75,14 @@
         self.bouncesZoom = YES;
         self.decelerationRate = UIScrollViewDecelerationRateFast;
         self.delegate = self;
+        
+        if ([DMAProperties getDMAProp].enableLocalStorage) {
+            // Add a gesture controler
+            UITapGestureRecognizer *tgr = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(handleGesture:)];
+            tgr.numberOfTapsRequired = 1;
+            tgr.numberOfTouchesRequired = 1;
+            [self addGestureRecognizer:tgr];
+        }
     }
     return self;
 }

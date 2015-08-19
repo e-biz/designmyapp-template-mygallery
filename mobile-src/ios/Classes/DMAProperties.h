@@ -13,6 +13,7 @@
 //generation properties
 @property (nonatomic, assign) BOOL localImages;    // YES: no-backend, local images only - NO: back-end, url images only
 @property (nonatomic, retain) NSString * appTheme;
+@property (nonatomic, assign) BOOL enableLocalStorage; // YES: an action is available to store in the personal library the images
 
 
 +(DMAProperties *) getDMAProp;
