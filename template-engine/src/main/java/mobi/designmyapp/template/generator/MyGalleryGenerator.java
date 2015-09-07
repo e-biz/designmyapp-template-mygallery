@@ -20,6 +20,8 @@ import mobi.designmyapp.common.container.provider.Node;
 import mobi.designmyapp.common.container.provider.NodeRequest;
 import mobi.designmyapp.common.container.service.ContainerService;
 import mobi.designmyapp.common.util.UtilsFactory;
+import mobi.designmyapp.common.container.model.Container;
+import mobi.designmyapp.common.container.model.MigrationDescriptor;
 import mobi.designmyapp.mygallery.builder.MyGalleryAndroidBuilder;
 import mobi.designmyapp.mygallery.builder.MyGalleryContainerBuilder;
 import mobi.designmyapp.mygallery.builder.MyGalleryIosBuilder;
@@ -61,12 +63,12 @@ public class MyGalleryGenerator extends Generator<MyGalleryTemplate> {
 
   public MyGalleryGenerator() {
     super(MyGalleryTemplate.class);
-    addVersion("3.0.0");
+    addVersions("3.0.0", "3.1.0");
     // Create upload processors
     uploadProcessors = new ArrayList<>();
     // Support built-in image upload processor
     uploadProcessors.add(new ImageUploadProcessor());
-	// Support built-in zip upload processor
+    // Support built-in zip upload processor
     uploadProcessors.add(new ZipUploadProcessor());
 
     // Add custom image archive processor
@@ -74,6 +76,7 @@ public class MyGalleryGenerator extends Generator<MyGalleryTemplate> {
     archiveProcessors.add(new ImageArchiveProcessor());
 
     createDesignMyAppNode();
+	  createMigrationDescriptors();
   }
 
   /**
@@ -198,5 +201,16 @@ public class MyGalleryGenerator extends Generator<MyGalleryTemplate> {
         .build();
     Node designMyAppNode = cs.createNode(dmaNodeRequest);
     cm.addNode(designMyAppNode);
+  }
+
+  private void createMigrationDescriptors() {
+    // Declaration of the migration descriptor
+    addMigrationDescriptor(MigrationDescriptor.builder()
+        .from("3.0.0")
+        .to("3.1.0")
+        .migrationImage("designmyapp/mygallery-migrator:v3.0.0-v3.1.0")
+        .migrationTimeout(1)
+        .dumpTimeout(1)
+        .build());
   }
 }
